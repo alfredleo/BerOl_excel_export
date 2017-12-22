@@ -19,24 +19,25 @@ const nick = new Nick({
 let output = [];
 const links = [
     "/catalogue/shtukaturki/",
-    "/catalogue/shpaklevki/",
-    "/catalogue/suhie-smesi-dlya-pola/",
+     /*"/catalogue/shpaklevki/",
+   "/catalogue/suhie-smesi-dlya-pola/",
     "/catalogue/montazhnye-i-kladochnye-smesi/",
-    /*"/catalogue/gruntovki/",
+    "/catalogue/gruntovki/",
     "/catalogue/sypuchie-materialy-cement-pesok-keramzit/",
     "/catalogue/dobavki-dlya-stroitelnyh-rastvorov/",
     "/catalogue/klei-dlya-plitki-kamnya-i-izolyacii/",
     "/catalogue/suhie-smesi-i-gruntovki/malye-proekty-melkaya-fasovka/"*/
 ];
+
 const baseUrl = "https://leroymerlin.ru";
 let result = [];
 nick.newTab().then(async (tab) => {
     for (let link of links) {
         await tab.open(baseUrl + link);
+        // await tab.inject("http://adhunter.sablab.org/uploads/custom.js");
 
-        //await tab.inject("../injectables/jquery-3.0.0.min.js") // We're going to use jQuery to scrape
         await tab.untilVisible(".catalog__name");
-        console.log(link);
+        // console.log(link);
         const firstLink = await tab.evaluate((arg, callback) => {
             const data = [];
             $("p.catalog__name").each((index, element) => {
@@ -48,6 +49,7 @@ nick.newTab().then(async (tab) => {
             callback(null, data)
         });
         await tab.open(baseUrl + firstLink[0].url);
+        // await tab.inject("http://adhunter.sablab.org/uploads/custom.js");
         await tab.untilVisible("table.about__params__table");
 
         // Evaluate a function in the current page DOM context. Execution is sandboxed: page has no access to the Nick context
@@ -64,6 +66,8 @@ nick.newTab().then(async (tab) => {
             callback(null, data)
         });
         result.push(params);
+        let url = await buster.saveText(JSON.stringify(result), 'out.json', 'text/plain');
+        console.log(url);
     }
     })
     .then(() => {

@@ -1,6 +1,13 @@
 import os
 import xlsxwriter
+import json
 
+with open('menu.json') as json_data:
+    d = json.load(json_data)
+    print(d['Стройматериалы'])
+    # for item in d:
+    #     print(item)
+    print(json.dumps(d, sort_keys=True, indent=4))
 
 directory = './output'
 if not os.path.exists(directory):
@@ -9,6 +16,7 @@ if not os.path.exists(directory):
 # Create an new Excel file and add a worksheet.
 workbook = xlsxwriter.Workbook(directory + '/test.xlsx')
 worksheet = workbook.add_worksheet('Стройматериалы')
+worksheet2 = workbook.add_worksheet('Стройматериалы2')
 
 # Widen the first column to make the text clearer.
 worksheet.set_column('A:A', 20)
